@@ -1,0 +1,86 @@
+
+
+body {
+    font-size:24px;
+    color:orange;
+    background:black;
+    margin-top:5%;	
+	margin-left:8%;
+
+}
+
+.rad {
+    margin-right:200px;
+    width:30px;
+    height:30px;
+}
+
+.scanbox {
+    background-color:#DD0000;
+    margin-right:200px;
+}
+
+.scanbox:focus {
+    background-color:#007000;
+}
+
+
+.button {
+	color: purple;
+	width: 220px;
+	padding: 10px 15px;
+	margin-right:20px;
+    background: #121212;
+	-webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    border: solid 1px purple;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4);
+    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+	font-size: 20px;
+	font-style: normal;
+	font-variant: small-caps;
+	font-weight: 700;
+}
+
+#trans-mode {
+    display:block;
+    float:left;
+}
+
+#edit-mode {
+    display:none;
+    float:left;
+    margin-top:2%;
+    margin-right:8%;
+}
+
+#titles {
+    width:250px;
+    float:left;
+    
+}
+#boxes{
+    float:left;
+    width:auto;
+}
+
+#aboutBox {
+    margin-bottom:15%;
+}
+
+input, textarea {
+    background:grey;
+    color:blue;
+    padding: 5px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    border: solid 1px purple;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4);
+    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+}
