@@ -1,48 +1,98 @@
 //project variables, project event processing functions, and project general use functions 
 
 //project variables
-var results = [];
-var items = "";
-            
-
-//Main function
+         
+//this.products = [];
+//Main function runs as soon as body loads
 function pageLoaded(){
-    //load and open database
+    //load and open database    
     this.db = new Dexie("Urban_City_Product_Database");
-    db.version(1).stores({urbanProducts: 'code, name, cost, description'});
+    db.version(1).stores({urbanProducts: 'code, nombre, model, price, cost, qty, description'});
     db.open();
+    radioClicked();
 
-    active = document.activeElement;
-    box = document.getElementById('inputBox'); box.style.backgroundColor = 'green';
-    input = document.getElementById("inputBox");	
-    output = document.getElementById("outputBox");
+    active = document.activeElement; //find the element active on page
+    input = document.getElementById("inputBox"); //assign scanner textbox as input
+    output = document.getElementById("outputBox"); //assign output textbox as such
+    nameVal = document.getElementById("nameBox");
+    model = document.getElementById("numBox");
+    price = document.getElementById("priceBox");
+    cost = document.getElementById("costBox");
+    stock = document.getElementById("stockBox");
+    about = document.getElementById("aboutBox");
+    barcode = document.getElementById("codeBox");
     
-    output.value = "";
+    output.value = ""; //initiate output box
     
-    document.addEventListener("click", function () {
-        active = document.activeElement;
-        if(box == active) {
-            box.style.backgroundColor = 'green'; 
-        }
-        else {
-            box.style.backgroundColor = 'red';
-        }
-    });
+    //set event listener to check for keypress 'ENTER' inside scanbox
     input.addEventListener("keypress", function (e) {
-        result = input.value;
         var key = e.which || e.keyCode;
         if (key == 13) { // 13 is enter
-            a = findMatch(result);
-            if(a != null) {
-                results.push(a);
+            scanVal = input.value; //get scanned value
+            input.value = ''; //reset scanbox for new scan
+            if(trans.checked) {
+                db.transaction('r', db.urbanProducts, function() {
+	                db.urbanProducts.where('code').equals(scanVal).each (function(item){
+                        rtn = output.value;
+                        bar = item.code;
+	                    n = "\t" + item.nombre;
+	                    price = "\t" + item.price;
+	                    cost = "\t" + item.cost;
+	                    desc = "\t" + item.description;
+	                    rtn = rtn + bar + n + price + desc + "\n";
+	                    outputBox.value = rtn;
+	                });
+	            }).catch(function(err) {
+                    console.error(err); //throw error if transaction fails
+                });
             }
-            else {
-                alert('Error: Product does not exist in database. Please use "Create Product" tool to remedy this.');
+            if(edit.checked) {
+                db.transaction('rw', db.urbanProducts, function() {
+	                db.urbanProducts.where('code').equals(scanVal).each (function(item){
+	                
+	                    barcode.value = item.code;
+	                    nameVal.value = item.nombre;
+	                    price.value = item.price;
+	                    cost.value = item.cost;
+	                    model.value = item.model;
+	                    stock.value = item.qty;
+	                    about.value = item.description;
+	                    
+	                });
+	            }).catch(function(err) {
+                    console.error(err); //throw error if transaction fails
+                });
             }
-            input.value = '';
-            //displayClicked();
+            
+            
+            //if scanVal already has match in DB then add it to transaction
+            //isMatch = findMatch(scanVal)
+            
+            //input.value = ''; //reset scanbox for new scan
+            //displayClicked(); //refresh output to show current transaction or new entry in DB
         }
     });
+}
+
+function clearClicked() {
+    output.value = '';
+}
+
+
+
+function radioClicked(){
+    trans = document.getElementById("trans");
+    edit = document.getElementById("edit");
+	if(trans.checked){
+	    document.getElementById("trans-mode").style.display	= 'block';
+	    document.getElementById("edit-mode").style.display	= 'none';
+	    document.getElementById("displayProductButton").style.display = 'none';
+	}
+	else if(edit.checked){
+		document.getElementById("trans-mode").style.display	= 'block';
+	    document.getElementById("edit-mode").style.display	= 'block';
+	    document.getElementById("displayProductButton").style.display = 'block';
+	}
 }
 
 //Read it dummy. What do you think it does?
@@ -59,47 +109,104 @@ function displayClicked() {
 
 function displayProductClicked() {
     output.value = '';
-    rtn = '';
+    result = "All of urban City's Products\n\nBarcode:\tModel Number:\tName:\tPrice:\tCost:\tStock:\tDescription:\n\n";
 	db.urbanProducts.each(function(item){
-        bar = item.code;
-	    n = "\t" + item.name;
-	    price = "\t" + item.cost;
-	    desc = "\t" + item.description;
-	    rtn = rtn + bar + n + price + desc + "\n";
-		outputBox.value = rtn;
+        var bar = item.code;
+        var model = "\t" + item.model;
+	    var n = "\t" + item.nombre;
+	    var price = "\t" + item.price;
+	    var cost = "\t" + item.cost;
+	    var stock = "\t" + item.qty;
+	    var desc = "\t" + item.description;
+	    result = result + bar + model + n + price + cost + stock + desc + "\n";
+		outputBox.value = result;
 	});
 }
 
+
+//pass scanned code to function which prompts user for info about product
+//and then adds a DB entry for the product
+function createProduct(barcode) {
+    //db.transaction('rw', db.urbanProducts, function() {
+    try {
+    	//var barcode = prompt("Scan the barcode on the product you want to add.");
+    	var inputName = prompt("What is the name of this product?");
+    	var inputPrice = prompt("What is the price of this product?");
+    	var inputDescription = prompt("Please write a short description for this item.");
+    	db.urbanProducts.add({
+    	    code: barcode,
+    	    nombre: inputName,
+    	    cost: inputPrice,
+    	    description: inputDescription
+    	}).then(function() {
+    	    //item = new Product(barcode, name, price, desc);
+            //addProduct(item);
+            displayProductClicked();
+        });
+    }
+    catch(err) {
+        console.error(err); //throw error if transaction fails
+    }
+}
+
+
+
 function createProductClicked() {
-    try{
+    db.transaction('rw', db.urbanProducts, function() {
     	//retrieve new wheel user input data into the string variable "line"
     	var barcode = prompt("Scan the barcode on the product you want to add.");
     	var inputName = prompt("What is the name of this product?");
     	var inputPrice = prompt("What is the price of this product?");
     	var inputDescription = prompt("Please write a short description for this item.");
-    	db.urbanProducts.add({code: barcode, name: inputName, cost: inputPrice, description: inputDescription});
+    	db.urbanProducts.add({
+    	    code: barcode,
+    	    nombre: inputName,
+    	    cost: inputPrice,
+    	    description: inputDescription
+    	});
     	//item = new Product(barcode, name, price, desc);
         //addProduct(item);
         displayProductClicked();
-    }
-    catch (errMsg) { alert (errMsg); }
+    }).catch(function(err) {
+        console.error(err); //throw error if transaction fails
+    });
 }
 
 function modProductClicked() {
-    try{
+    db.transaction('rw', db.urbanProducts, function() {
       	var barcode = prompt("Scan the barcode on the product you want to modify.");
       	
         db.urbanProducts
         .where("code")
         .equals(barcode)
         .modify(function(item){
-    	    item.name = prompt("What is the name of this product?",  item.name);
+    	    item.nombre = prompt("What is the name of this product?",  item.nombre);
     	    item.cost = prompt("What is the price of this product?", item.cost);
     	    item.description = prompt("Please write a short description for this item.", item.description);
     	});
-    }
-    catch (errMsg) { alert (errMsg); }
+    }).catch(function(err) {
+        console.error(err); //throw error if transaction fails
+    });
 }
 
-
+function createFromForm() {
+    db.transaction('rw', db.urbanProducts, function() {
+        scan = barcode.value;
+        db.urbanProducts
+        .where("code")
+        .equals(scan)
+        .modify(function(item){
+    	    item.nombre = nameVal.value;
+            item.price = price.value;
+            item.cost = cost.value;
+            item.model = model.value;
+            item.qty = stock.value;
+            item.description = about.value;
+        }).then(function() {
+            displayProductClicked();
+        });
+    }).catch(function(err) {
+        console.error(err); //throw error if transaction fails
+    });
+}
 
