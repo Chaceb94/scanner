@@ -9,34 +9,26 @@
   
     <!--load files containing the page's javascript code-->  
     <script src="scripts/Dexie.js"></script>
-    <script src="scripts/jquery.js"></script>
-    <script src="scripts/Product.js"></script>
-    
     <script src="scripts/scan_ui.js" type="text/javascript"></script>
     <link rel="stylesheet" type="text/css" href="scan_ui.css">
   </head>  
   
   <!--create and display the page's javascript accessable elements-->
   <body onload="pageLoaded();">
-    
-    <input type="button" class="button" id="displayButton" value="Display scanned items" onclick="displayClicked();" />
-    <input type="button" class="button" id="clearButton" value="Clear Output" onclick="clearClicked();" />
-    <input type="button" class="button" id="displayProductButton" value="Display All Products" onclick="displayProductClicked();" />
-    <br><br>
-    <input type="text" class="scanbox" id="inputBox" autofocus="true" placeholder="Click here to start scanning.">
+    <input type="text" class="scanbox" id="inputBox" autofocus="true" placeholder="Click here to start scanning">
     Transaction Mode: <input type="radio" class="rad" name="mode" id="trans" value="trans" onclick="radioClicked();" checked />
     Edit Mode: <input type="radio" class="rad" name="mode" id="edit" value="edit" onclick="radioClicked();" />
-    <br><br>
+    <br>
     
     <div id="edit-mode">
 	  <div id="titles">
   	    Scanned Barcode: <br><br>
 	    Product Name: <br><br>
-	    Part/Model Number: <br><br>
+	    Model Number: <br><br>
 	    Product Price: <br><br>
 	    Store's Cost: <br><br>
-	    Quantity in Stock: <br><br>
-	    Product Description:
+	    In Stock: <br><br>
+	    Notes:
 	    
 	  </div>
 	  
@@ -48,17 +40,18 @@
 	        <input type="text" id="priceBox" /><br><br>
 	        <input type="text" id="costBox" /><br><br>
 	        <input type="text" id="stockBox" /><br><br>	   
-	        <textarea id="aboutBox" rows="10" cols="51"></textarea> 
+	        <textarea id="aboutBox" rows="5" cols="19"></textarea> 
 	    </form>
 	  </div>
 	  <br>
-	  <input type="button" class="button" name="submit" Value="Submit Changes" onClick="createFromForm()">
+	  <input type="button" class="button" id='submitChanges' name="submitChanges" Value="Submit Changes" onClick="modifyFromForm()">
+	  <input type="button" class="button" id='submitNew' name="submitNew" Value="Submit New Product" onClick="createFromForm()">
 	</div>
 	<br><br>
     <div id="trans-mode">
       <textarea id="outputBox" readonly="true" rows="36" cols="80"></textarea>
 	</div>
-	
-	
+	<input type="button" class="button" id="clearButton" value="Clear Output" onclick="clearClicked();" />
+    <input type="button" class="button" id="displayProductButton" value="Display All Products" onclick="displayProductClicked();" />
   </body>
 </html>

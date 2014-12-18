@@ -5,12 +5,12 @@ body {
     color:orange;
     background:black;
     margin-top:5%;	
-	margin-left:8%;
+	margin-left:5%;
 
 }
 
 .rad {
-    margin-right:200px;
+    margin-right:150px;
     width:30px;
     height:30px;
 }
@@ -18,18 +18,49 @@ body {
 .scanbox {
     background-color:#DD0000;
     margin-right:200px;
+	width: 270px;
+	height:100px;
+	padding: 5px;
+	margin-right:20px;
+	-webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    border: solid 1px purple;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4);
+    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+	font-size: 20px;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: 600;7
+    
 }
 
 .scanbox:focus {
     background-color:#007000;
+
 }
 
+.scanbox::-webkit-input-placeholder { /* WebKit browsers */
+    color:black;
+}
+
+.scanbox::-moz-placeholder { /* Mozilla Firefox 19+ */
+   color:black;
+   opacity:  1;
+}
+
+.scanbox:-ms-input-placeholder { /* Internet Explorer 10+ */
+   color:black;
+}
 
 .button {
 	color: purple;
-	width: 220px;
-	padding: 10px 15px;
+	width: 200px;
+	padding: 5px;
 	margin-right:20px;
+	margin-bottom:20px;
     background: #121212;
 	-webkit-border-radius: 4px;
     -moz-border-radius: 4px;
@@ -48,17 +79,18 @@ body {
 #trans-mode {
     display:block;
     float:left;
+    margin-right:5%;
 }
 
 #edit-mode {
     display:none;
     float:left;
     margin-top:2%;
-    margin-right:8%;
+    margin-right:5%;
 }
 
 #titles {
-    width:250px;
+    width:200px;
     float:left;
     
 }
@@ -69,6 +101,16 @@ body {
 
 #aboutBox {
     margin-bottom:15%;
+}
+
+#submitChanges {
+    float:right;
+    display:'none';
+}
+
+#submitNew {
+    float:right;
+    display:'none';
 }
 
 input, textarea {
