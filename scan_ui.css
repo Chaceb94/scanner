@@ -108,14 +108,20 @@ body {
     display:'none';
 }
 
+#deleteProduct {
+    float:right;
+    display:'none';
+}
+
 #submitNew {
     float:right;
     display:'none';
 }
 
 input, textarea {
-    background:grey;
-    color:blue;
+    background:#303030;
+    color:#00FF00;
+    font-size: 16px;
     padding: 5px;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;

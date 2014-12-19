@@ -44,14 +44,16 @@
 	    </form>
 	  </div>
 	  <br>
-	  <input type="button" class="button" id='submitChanges' name="submitChanges" Value="Submit Changes" onClick="modifyFromForm()">
+	  <input type="button" class="button" id='submitChanges' name="submitChanges" Value="Submit Changes" onClick="modifyFromForm()"><br>
+	  <input type="button" class="button" id='deleteProduct' name="deleteProduct" Value="Delete Product From DB" onClick="deleteFromForm()">
 	  <input type="button" class="button" id='submitNew' name="submitNew" Value="Submit New Product" onClick="createFromForm()">
 	</div>
 	<br><br>
     <div id="trans-mode">
-      <textarea id="outputBox" readonly="true" rows="36" cols="80"></textarea>
+      <textarea id="outputBox" readonly="true" rows="36" cols="100"></textarea>
 	</div>
-	<input type="button" class="button" id="clearButton" value="Clear Output" onclick="clearClicked();" />
+	<input type="button" class="button" id="cancelButton" value="Cancel Transaction" onclick="cancelClicked();" /><br>
+    <input type="button" class="button" id="completeButton" value="Complete Transaction" onclick="completeClicked();" />
     <input type="button" class="button" id="displayProductButton" value="Display All Products" onclick="displayProductClicked();" />
   </body>
 </html>

@@ -44,23 +44,38 @@ function pageLoaded(){
 	                    while(i < transList.length) {
 	                        var t = transList[i];
 	                        if(product.code == t.code) {
-	                            alert('match');
 	                            t.qty++;
 	                            isMatch = true;
 	                        }
 	                        i++;
 	                    }
-	                    if(isMatch) {
+	                    if(!isMatch) {
 	                        transList.push(product);
 	                    }
 	                }).then(function() {
 	                    i = 0;
-	                    result = '';
+	                    result = 'Barcode\t\t|Name\t\t|Each\t\t|Qty\t|Sub-Total\n' + 
+	                    '\t\t|\t\t|\t\t|\t|\n';
 	                    while(i < transList.length) {
 	                        t = transList[i];
-	                        result = result + t.code + '\t' + t.name + '\t' + t.price + '\t' + t.qty + '\n';
+	                        
+	                        if(t.code.length > 6) { result = result + t.code + '\t|' }
+	                        else { result = result + t.code + '\t\t|' }
+	                        
+	                        if(t.name.length > 6) {result = result + t.name + '\t|' }
+	                        else { result = result + t.name + '\t\t|' }
+	                        
+	                        if(t.price.length > 6) {result = result + t.price + '\t|' }
+	                        else { result = result + t.price + '\t\t|' }
+	                        
+	                        
+	                        
+	                        result = result + t.qty + '\t|';
+	                        
+	                        result = result + (t.price*t.qty).toFixed(2) + '\n';
 	                        i++;
 	                    }
+	                    
 	                    output.value = result + "\nTotal = " + total.toFixed(2);
 	                });
 	            }).catch(function(err) {
@@ -79,6 +94,7 @@ function pageLoaded(){
 	                    stock.value = item.qty;
 	                    about.value = item.notes;
 	                    document.getElementById('submitChanges').style.display = 'block';
+	                    document.getElementById('deleteProduct').style.display = 'block';
 	                    document.getElementById('submitNew').style.display = 'none';
 	                }).then(function() {
 	                    if(barcode.value == ''){
@@ -109,7 +125,7 @@ function pageLoaded(){
     });
 }
 
-function clearClicked() {
+function cancelClicked() {
     output.value = '';
     total = 0;
     transList = [];
@@ -121,6 +137,7 @@ function radioClicked(){
     trans = document.getElementById("trans");
     edit = document.getElementById("edit");
     document.getElementById('submitChanges').style.display = 'none';
+    document.getElementById('deleteProduct').style.display = 'none';
 	document.getElementById('submitNew').style.display = 'none';               
 	if(trans.checked){
 	    document.getElementById("trans-mode").style.display	= 'block';
@@ -136,20 +153,53 @@ function radioClicked(){
 	}
 }
 
+function completeClicked() {
+
+    i = 0;
+    while(i < transList.length) {
+        t = transList[i];
+        
+        db.urbanProducts.where('code').equals(t.code).modify(function(item){
+            item.qty = item.qty - t.qty;
+        }).then(function () {
+            output.value = "Transaction Completed";
+            transList = [];
+            total = 0;
+        }).catch(function(err) {
+            console.error(err); //throw error if transaction fails
+        });
+        
+        i++;
+    }
+
+}
+
 function displayProductClicked() {
     output.value = '';
-    result = "All of urban City's Products\n\nBarcode:\tModel Number:\tName:\tPrice:\tCost:\tStock:\tNotes:\n\n";
+    result = "All of urban City's Products\n\nBarcode\t\t|Model Number\t|Name\t\t|Price\t\t|Cost\t\t|Stock\t|Notes\n\n";
 	db.urbanProducts.each(function(item){
-        var bar = item.code;
-        var model = "\t" + item.model;
-	    var n = "\t" + item.nombre;
-	    var price = "\t" + item.price;
-	    var cost = "\t" + item.cost;
-	    var stock = "\t" + item.qty;
-	    var desc = "\t" + item.notes;
+        if(item.code.length > 6) { var bar = item.code + "\t|"}
+        else { var bar = item.code + "\t\t|" }
+        
+        if(item.model.length > 6) { var model = item.model + "\t|"}
+        else { var model = item.model + "\t\t|" }
+        
+        if(item.nombre.length > 6) { var n = item.nombre + "\t|"}
+        else { var n = item.nombre + "\t\t|" }
+       
+        if(item.price.length > 6) { var price = item.price + "\t|"}
+        else { var price = item.price + "\t\t|" }
+       
+        if(item.cost.length > 6) { var cost = item.cost + "\t|"}
+        else { var cost = item.cost + "\t\t|" }
+        
+        var stock = item.qty + "\t|";
+	    var desc = item.notes;
 	    result = result + bar + model + n + price + cost + stock + desc + "\n";
 		output.value = result;
-	});
+	}).catch(function(err) {
+        console.error(err); //throw error if transaction fails
+    });
 }
 
 function modifyFromForm() {
@@ -170,6 +220,17 @@ function modifyFromForm() {
         console.error(err); //throw error if transaction fails
     });
 }
+
+function deleteFromForm() {
+    db.transaction('rw', db.urbanProducts, function() {
+        db.urbanProducts.where("code").equals(scanVal).delete().then(function() {
+            displayProductClicked();
+        });
+    }).catch(function(err) {
+        console.error(err); //throw error if transaction fails
+    });
+}
+
 
 function createFromForm() {
     db.transaction('rw', db.urbanProducts, function() {
