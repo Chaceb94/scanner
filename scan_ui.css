@@ -1,12 +1,10 @@
 
-
 body {
     font-size:24px;
     color:orange;
     background:black;
-    margin-top:5%;	
-	margin-left:5%;
-
+    margin-top:3%;	
+	margin-left:3%;
 }
 
 .rad {
@@ -57,7 +55,7 @@ body {
 
 .button {
 	color: purple;
-	width: 200px;
+	width: auto;
 	padding: 5px;
 	margin-right:20px;
 	margin-bottom:20px;
@@ -79,18 +77,18 @@ body {
 #trans-mode {
     display:block;
     float:left;
-    margin-right:5%;
+    margin-right:2%;
 }
 
 #edit-mode {
     display:none;
     float:left;
     margin-top:2%;
-    margin-right:5%;
+    margin-right:2%;
 }
 
 #titles {
-    width:200px;
+    width:auto;
     float:left;
     
 }
@@ -122,7 +120,7 @@ input, textarea {
     background:#303030;
     color:#00FF00;
     font-size: 16px;
-    padding: 5px;
+    padding: 5px 5px;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
     border-radius: 4px;

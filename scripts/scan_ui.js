@@ -54,7 +54,7 @@ function pageLoaded(){
 	                    }
 	                }).then(function() {
 	                    i = 0;
-	                    result = 'Barcode\t\t|Name\t\t|Each\t\t|Qty\t|Sub-Total\n' + 
+	                    result = 'Barcode\t\t|Name\t\t\t\t|Each\t\t|Qty\t|Sub-Total\n' + 
 	                    '\t\t|\t\t|\t\t|\t|\n';
 	                    while(i < transList.length) {
 	                        t = transList[i];
@@ -63,7 +63,7 @@ function pageLoaded(){
 	                        else { result = result + t.code + '\t\t|' }
 	                        
 	                        if(t.name.length > 6) {result = result + t.name + '\t|' }
-	                        else { result = result + t.name + '\t\t|' }
+	                        else { result = result + t.name + '\t\t\t|' }
 	                        
 	                        if(t.price.length > 6) {result = result + t.price + '\t|' }
 	                        else { result = result + t.price + '\t\t|' }
@@ -142,13 +142,17 @@ function radioClicked(){
 	if(trans.checked){
 	    document.getElementById("trans-mode").style.display	= 'block';
 	    document.getElementById("edit-mode").style.display	= 'none';
-	    document.getElementById("displayProductButton").style.display = 'none';
+	    //document.getElementById("displayProductButton").style.display = 'none';
+	    document.getElementById("cancelButton").style.display = 'block';
+	    document.getElementById("completeButton").style.display = 'block';
 	    output.value = '';
 	}
 	else if(edit.checked){
 		document.getElementById("trans-mode").style.display	= 'block';
 	    document.getElementById("edit-mode").style.display	= 'block';
-	    document.getElementById("displayProductButton").style.display = 'block';
+	    //document.getElementById("displayProductButton").style.display = 'block';
+	    document.getElementById("cancelButton").style.display = 'none';
+	    document.getElementById("completeButton").style.display = 'none';
 	    displayProductClicked();
 	}
 }
@@ -176,7 +180,7 @@ function completeClicked() {
 
 function displayProductClicked() {
     output.value = '';
-    result = "All of urban City's Products\n\nBarcode\t\t|Model Number\t|Name\t\t|Price\t\t|Cost\t\t|Stock\t|Notes\n\n";
+    result = "All of urban City's Products\n\nBarcode\t\t|Model Number\t|Name\t\t\t\t\t|Price\t\t|Cost\t\t|Stock\t|Notes\n\n";
 	db.urbanProducts.each(function(item){
         if(item.code.length > 6) { var bar = item.code + "\t|"}
         else { var bar = item.code + "\t\t|" }
@@ -184,8 +188,10 @@ function displayProductClicked() {
         if(item.model.length > 6) { var model = item.model + "\t|"}
         else { var model = item.model + "\t\t|" }
         
-        if(item.nombre.length > 6) { var n = item.nombre + "\t|"}
-        else { var n = item.nombre + "\t\t|" }
+        if(item.nombre.length > 30) { var n = item.nombre + "\t|"}
+        else if(item.nombre.length > 22) { var n = item.nombre + "\t\t|"}
+        else if(item.nombre.length > 14) { var n = item.nombre + "\t\t\t|"}
+        else { var n = item.nombre + "\t\t\t\t|" }
        
         if(item.price.length > 6) { var price = item.price + "\t|"}
         else { var price = item.price + "\t\t|" }
@@ -203,13 +209,26 @@ function displayProductClicked() {
 }
 
 function modifyFromForm() {
+
     db.transaction('rw', db.urbanProducts, function() {
         scan = barcode.value;
         db.urbanProducts.where("code").equals(scan).modify(function(item){
             item.code = scan
     	    item.nombre = nameVal.value;
-            item.price = price.value;
-            item.cost = cost.value;
+            alert(Number(price.value));
+    	    if(Number(price.value) == NaN) {
+    	        Alert(Error('Please only use numbers and decimals.'));
+            }
+            else {
+                item.price = price.value;
+            }
+            
+            if(Number(cost.value) == NaN) {
+                throw Error('Please only use numbers and decimals.');
+            }    
+            else {
+                item.cost = cost.value;
+            }
             item.model = model.value;
             item.qty = stock.value;
             item.notes = about.value;
