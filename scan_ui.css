@@ -1,74 +1,64 @@
 
 body {
-    font-size:24px;
-    color:orange;
+    font-size:100%;
+    color:white;
     background:black;
-    margin-top:3%;	
-	margin-left:3%;
+    margin-top:1em;
+	margin-left:1em;
+}
+
+header {
+    text-align:center;
+    margin-bottom:3em;
+    display:block;
+    width:inherit;
+}
+
+#main {
+    font-size:1.2em;
 }
 
 .rad {
-    margin-right:150px;
-    width:30px;
-    height:30px;
+    margin-right:1em;
+    width:2em;
+    height:2em;
 }
 
 .scanbox {
-    background-color:#DD0000;
-    margin-right:200px;
-	width: 270px;
-	height:100px;
-	padding: 5px;
-	margin-right:20px;
-	-webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-    border: solid 1px purple;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4);
-    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
-	font-size: 20px;
-	font-style: normal;
-	font-variant: normal;
-	font-weight: 600;7
-    
+    background-color:#101010;
+    margin-right:3em;
+	width: 12em;
+	height:1em;
+	padding: 1em;
+	margin-right:1em;
+    border-radius: 0.5em;
+    border: solid 0.1em #EE0000;
+	font-size: 1.2em;
+    text-align:center;
 }
 
 .scanbox:focus {
-    background-color:#007000;
-
+    background-color:#101010;
+    border: solid 0.1em #007000;
+    color:#007000;
 }
 
 .scanbox::-webkit-input-placeholder { /* WebKit browsers */
-    color:black;
+    color:#EE0000;
 }
-
-.scanbox::-moz-placeholder { /* Mozilla Firefox 19+ */
-   color:black;
-   opacity:  1;
+.scanbox:focus::-webkit-input-placeholder { /* WebKit browsers */
+    color:#009900;
 }
-
-.scanbox:-ms-input-placeholder { /* Internet Explorer 10+ */
-   color:black;
-}
-
 .button {
-	color: purple;
-	width: auto;
+	color: white;
+	width: 12em;
 	padding: 5px;
 	margin-right:20px;
 	margin-bottom:20px;
     background: #121212;
-	-webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-    border: solid 1px purple;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4);
-    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
-	font-size: 20px;
+    border-radius: 0.5em;
+    border: solid 0.06em white;
+	font-size: 1em;
 	font-style: normal;
 	font-variant: small-caps;
 	font-weight: 700;
@@ -77,56 +67,86 @@ body {
 #trans-mode {
     display:block;
     float:left;
-    margin-right:2%;
+    margin-right:1em;
 }
+
+
+#outputBox
+{
+    cursor:pointer;
+    width:auto;
+    font-size: 1em;
+    font-family: courier new;
+    border-collapse: collapse;
+    margin-bottom:2em;
+}
+#outputBox th {
+    background-color:black;
+    padding:0.4em;
+    color:white;
+    border:0.1em solid white;
+}
+
+#outputBox td, tr {
+    background-color:#101010;
+    color:#00C000;
+    padding:0.1em 0.6em;
+    border:0.1em solid white;
+}
+
+#outputBox tr:hover td { background-color:black; } /* hovering */
 
 #edit-mode {
     display:none;
     float:left;
-    margin-top:2%;
-    margin-right:2%;
+    margin-top:1em;
+    margin-right:1em;
 }
 
 #titles {
+    font-size:1.1em;
     width:auto;
     float:left;
-    
 }
 #boxes{
     float:left;
-    width:auto;
 }
 
 #aboutBox {
-    margin-bottom:15%;
+    margin-bottom:1em;
 }
 
 #submitChanges {
     float:right;
-    display:'none';
+    display:none;
 }
 
 #deleteProduct {
     float:right;
-    display:'none';
+    display:none;
 }
 
 #submitNew {
     float:right;
-    display:'none';
+    display:none;
 }
 
-input, textarea {
-    background:#303030;
+input {
+    background:#101010;
     color:#00FF00;
-    font-size: 16px;
-    padding: 5px 5px;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-    border: solid 1px purple;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4);
-    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+    width:11.6em;
+    font-size: 1em;
+    padding: 0.1em 0.1em;
+    border-radius: 0.5em;
+    border: solid 0.1em white;
+}
+
+textarea {
+    background:#101010;
+    color:#00FF00;
+    width:13.6em;
+    font-size: 1em;
+    padding: 0.1em 0.1em;
+    border-radius: 0.5em;
+    border: solid 0.1em white;
 }

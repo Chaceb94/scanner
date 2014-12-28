@@ -12,6 +12,7 @@ function pageLoaded(){
     stock = document.getElementById("stockBox");
     about = document.getElementById("aboutBox");
     barcode = document.getElementById("codeBox");
+    c = 0;
     total = 0;
     transList = [];
 
@@ -21,7 +22,7 @@ function pageLoaded(){
     db.open();
     radioClicked();
 
-    output.value = ""; //initiate output box
+    output.innerHTML = "<caption>Current Transaction</caption><th>Barcode</th><th>Name</th><th>Each</th><th>Qty</th><th>Sub-Total</th><tr><td>No Products Scanned.</td><td></td><td></td><td></td><td></td><tr>"; //initiate output box
     
     //set event listener to check for keypress 'ENTER' inside scanbox
     input.addEventListener("keypress", function (e) {
@@ -54,29 +55,22 @@ function pageLoaded(){
 	                    }
 	                }).then(function() {
 	                    i = 0;
-	                    result = 'Barcode\t\t|Name\t\t\t\t|Each\t\t|Qty\t|Sub-Total\n' + 
-	                    '\t\t|\t\t|\t\t|\t|\n';
+	                    output.innerHTML = "<caption>Current Transaction</caption><th>Barcode</th><th>Name</th><th>Each</th><th>Qty</th><th>Sub-Total</th>";
 	                    while(i < transList.length) {
 	                        t = transList[i];
-	                        
-	                        if(t.code.length > 6) { result = result + t.code + '\t|' }
-	                        else { result = result + t.code + '\t\t|' }
-	                        
-	                        if(t.name.length > 6) {result = result + t.name + '\t|' }
-	                        else { result = result + t.name + '\t\t\t|' }
-	                        
-	                        if(t.price.length > 6) {result = result + t.price + '\t|' }
-	                        else { result = result + t.price + '\t\t|' }
-	                        
-	                        
-	                        
-	                        result = result + t.qty + '\t|';
-	                        
-	                        result = result + (t.price*t.qty).toFixed(2) + '\n';
+                            var bar = "<td>" + t.code + "</td>";
+                            var n = "<td>" + t.name + "</td>";
+                            var price = "<td>" + t.price + "</td>";
+	                        var qty = '<td>' + t.qty + '</td>';
+                            var subT = '<td>' + (t.price*t.qty).toFixed(2) + '</td>';
+
+                            result = bar + n + price + qty + subT;
+                            output.innerHTML = output.innerHTML + '<tr>' + result + '</tr>';
+                            result = '';
 	                        i++;
 	                    }
 	                    
-	                    output.value = result + "\nTotal = " + total.toFixed(2);
+	                    output.innerHTML = output.innerHTML + "\nTotal = " + total.toFixed(2);
 	                });
 	            }).catch(function(err) {
                     console.error(err); //throw error if transaction fails
@@ -123,10 +117,45 @@ function pageLoaded(){
             }
         }
     });
+
+    output.addEventListener("click", function () {
+        if (output != null) {
+            for (var i = 0; i < output.rows.length; i++) {
+                output.rows[i].onclick = function () {
+                    
+                    outputText(this.cells[0]);
+                };
+            }
+        }
+    });
+}
+
+
+
+
+function outputText(outputCell) {
+    barcodeVal = outputCell.innerHTML;
+
+    db.transaction('r', db.urbanProducts, function() {
+        db.urbanProducts.where('code').equals(barcodeVal).each (function(item){
+            barcode.value = item.code;
+            nameVal.value = item.nombre;
+            price.value = item.price;
+            cost.value = item.cost;
+            model.value = item.model;
+            stock.value = item.qty;
+            about.value = item.notes;
+            document.getElementById('submitChanges').style.display = 'block';
+            document.getElementById('deleteProduct').style.display = 'block';
+            document.getElementById('submitNew').style.display = 'none';
+        }).catch(function(err) {
+          console.error(err); //throw error if transaction fails
+        });
+    });
 }
 
 function cancelClicked() {
-    output.value = '';
+    output.innerHTML = "<caption>Current Transaction</caption><th>Barcode</th><th>Name</th><th>Each</th><th>Qty</th><th>Sub-Total</th><tr><td>No Products Scanned.</td><td></td><td></td><td></td><td></td><tr>";
     total = 0;
     transList = [];
 }
@@ -145,7 +174,7 @@ function radioClicked(){
 	    //document.getElementById("displayProductButton").style.display = 'none';
 	    document.getElementById("cancelButton").style.display = 'block';
 	    document.getElementById("completeButton").style.display = 'block';
-	    output.value = '';
+	    output.innerHTML = "<caption>Current Transaction</caption><th>Barcode</th><th>Name</th><th>Each</th><th>Qty</th><th>Sub-Total</th><tr><td>No Products Scanned.</td><td></td><td></td><td></td><td></td><tr>";
 	}
 	else if(edit.checked){
 		document.getElementById("trans-mode").style.display	= 'block';
@@ -166,11 +195,11 @@ function completeClicked() {
         db.urbanProducts.where('code').equals(t.code).modify(function(item){
             item.qty = item.qty - t.qty;
         }).then(function () {
-            output.value = "Transaction Completed";
+            output.innerHTML = "<caption>Current Transaction</caption><th>Barcode</th><th>Name</th><th>Each</th><th>Qty</th><th>Sub-Total</th><tr><td>Transaction Completed.</td><td></td><td></td><td></td><td></td><tr>";
             transList = [];
             total = 0;
         }).catch(function(err) {
-            console.error(err); //throw error if transaction fails
+            alert(err); //throw error if transaction fails
         });
         
         i++;
@@ -179,30 +208,19 @@ function completeClicked() {
 }
 
 function displayProductClicked() {
-    output.value = '';
-    result = "All of urban City's Products\n\nBarcode\t\t|Model Number\t|Name\t\t\t\t\t|Price\t\t|Cost\t\t|Stock\t|Notes\n\n";
+    output.innerHTML = "<caption>All of urban City's Products</caption><th>Barcode</th><th>Model Number</th><th>Name</th><th>Price</th><th>Cost</th><th>Stock</th><th>Notes</th>";
 	db.urbanProducts.each(function(item){
-        if(item.code.length > 6) { var bar = item.code + "\t|"}
-        else { var bar = item.code + "\t\t|" }
+        var bar = "<td>" + item.code + "</td>";       
+        var model = "<td>" + item.model + "</td>";
+        var n = "<td>" + item.nombre + "</td>";
+        var price = "<td>" + item.price + "</td>";
+        var cost = "<td>" + item.cost + "</td>";
+        var stock = "<td>" + item.qty + "</td>";
+	    var desc = "<td>" + item.notes + "</td>";
         
-        if(item.model.length > 6) { var model = item.model + "\t|"}
-        else { var model = item.model + "\t\t|" }
-        
-        if(item.nombre.length > 30) { var n = item.nombre + "\t|"}
-        else if(item.nombre.length > 22) { var n = item.nombre + "\t\t|"}
-        else if(item.nombre.length > 14) { var n = item.nombre + "\t\t\t|"}
-        else { var n = item.nombre + "\t\t\t\t|" }
-       
-        if(item.price.length > 6) { var price = item.price + "\t|"}
-        else { var price = item.price + "\t\t|" }
-       
-        if(item.cost.length > 6) { var cost = item.cost + "\t|"}
-        else { var cost = item.cost + "\t\t|" }
-        
-        var stock = item.qty + "\t|";
-	    var desc = item.notes;
-	    result = result + bar + model + n + price + cost + stock + desc + "\n";
-		output.value = result;
+	    result = bar + model + n + price + cost + stock + desc;
+        output.innerHTML = output.innerHTML + '<tr>' + result + '</tr>';
+        result = '';
 	}).catch(function(err) {
         console.error(err); //throw error if transaction fails
     });
@@ -215,34 +233,28 @@ function modifyFromForm() {
         db.urbanProducts.where("code").equals(scan).modify(function(item){
             item.code = scan
     	    item.nombre = nameVal.value;
-            alert(Number(price.value));
-    	    if(Number(price.value) == NaN) {
-    	        Alert(Error('Please only use numbers and decimals.'));
+                	    
+            if(isNaN(price.value) || isNaN(cost.value) || isNaN(stock.value)) {
+    	        throw 'Please only use numbers and decimals for cost/price/stock.';
             }
             else {
                 item.price = price.value;
-            }
-            
-            if(Number(cost.value) == NaN) {
-                throw Error('Please only use numbers and decimals.');
-            }    
-            else {
                 item.cost = cost.value;
+                item.qty = stock.value;
             }
             item.model = model.value;
-            item.qty = stock.value;
             item.notes = about.value;
         }).then(function() {
             displayProductClicked();
         });
     }).catch(function(err) {
-        console.error(err); //throw error if transaction fails
+        alert(err); //throw error if transaction fails
     });
 }
 
 function deleteFromForm() {
     db.transaction('rw', db.urbanProducts, function() {
-        db.urbanProducts.where("code").equals(scanVal).delete().then(function() {
+        db.urbanProducts.where("code").equals(barcode.value).delete().then(function() {
             displayProductClicked();
         });
     }).catch(function(err) {
@@ -254,19 +266,25 @@ function deleteFromForm() {
 function createFromForm() {
     db.transaction('rw', db.urbanProducts, function() {
         scan = barcode.value;
-        db.urbanProducts.add({
-            code: barcode.value,
-    	    nombre: nameVal.value,
-            price: price.value,
-            cost: cost.value,
-            model: model.value,
-            qty: stock.value,
-            notes: about.value
-        }).then(function() {
-            displayProductClicked();
-        });
+        if(isNaN(price.value) || isNaN(cost.value) || isNaN(stock.value))  {
+    	    throw 'Please only use numbers and decimals for cost/price/stock.';
+        }
+        else {
+        
+            db.urbanProducts.add({
+                code: barcode.value,
+    	        nombre: nameVal.value,
+                price: price.value,
+                cost: cost.value,
+                model: model.value,
+                qty: stock.value,
+                notes: about.value
+            }).then(function() {
+                displayProductClicked();
+            });
+        }
     }).catch(function(err) {
-        console.error(err); //throw error if transaction fails
+        alert(err); //throw error if transaction fails
     });
 }
 

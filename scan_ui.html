@@ -15,20 +15,23 @@
   
   <!--create and display the page's javascript accessable elements-->
   <body onload="pageLoaded();">
-    <input type="text" class="scanbox" id="inputBox" autofocus="true" placeholder="Click here to start scanning">
-    Transaction Mode: <input type="radio" class="rad" name="mode" id="trans" value="trans" onclick="radioClicked();" checked />
-    Edit Mode: <input type="radio" class="rad" name="mode" id="edit" value="edit" onclick="radioClicked();" />
-    <br>
+    <header><img src="img/uch.png" alt="Urban City Scanner App" height="200"></header>
+    
+    <div id='main'>    
+        <input type="text" class="scanbox" id="inputBox" autofocus="true" placeholder="Click here to start scanning">
+        Transaction Mode: <input type="radio" class="rad" name="mode" id="trans" value="trans" onclick="radioClicked();" checked />
+        Edit Mode: <input type="radio" class="rad" name="mode" id="edit" value="edit" onclick="radioClicked();" />
+    </div>
     
     <div id="edit-mode">
 	  <div id="titles">
-  	    Scanned Barcode: <br><br>
-	    Product Name: <br><br>
-	    Model Number: <br><br>
-	    Product Price: <br><br>
-	    Store's Cost: <br><br>
-	    In Stock: <br><br>
-	    Notes:
+  	    <p>Scanned Barcode: </p>
+	    <p>Product Name: </p>
+	    <p>Model Number: </p>
+	    <p>Product Price: </p>
+	    <p>Store's Cost: </p>
+	    <p>In Stock: </p>
+	    <p>Notes: </p>
 	    
 	  </div>
 	  
@@ -50,10 +53,10 @@
 	</div>
 	<br><br>
     <div id="trans-mode">
-      <textarea id="outputBox" readonly="true" rows="36" cols="180"></textarea>
-	</div>
-	<input type="button" class="button" id="cancelButton" value="Cancel Transaction" onclick="cancelClicked();" /><br>
-    <input type="button" class="button" id="completeButton" value="Complete Transaction" onclick="completeClicked();" />
-    <!--<input type="button" class="button" id="displayProductButton" value="Display All Products" onclick="displayProductClicked();" /-->
+      <table id="outputBox">
+      </table>	
+	  <input type="button" class="button" id="cancelButton" value="Cancel Transaction" onclick="cancelClicked();" />
+      <input type="button" class="button" id="completeButton" value="Complete Transaction" onclick="completeClicked();" />
+    </div>
   </body>
 </html>
